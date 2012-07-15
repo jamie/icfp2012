@@ -1,4 +1,6 @@
 class Lifter::Map
+  attr_reader :lambdas, :moves
+
   ROBOT       = 'R'
   WALL        = '#'
   ROCK        = '*'

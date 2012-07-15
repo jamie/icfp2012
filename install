@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Be sure to set up ruby19 in PACKAGES-TESTING
+
+gem install bundler
+bundle install --path tmp

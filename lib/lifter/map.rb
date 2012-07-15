@@ -42,6 +42,7 @@ class Lifter::Map
   
   def tell_robot(command)
     raise "Commands after execution aborted!" if @aborted
+    raise "Commands after robot was crushed!" if dead?
     @moves += 1
     send({
       "A" => :abort,

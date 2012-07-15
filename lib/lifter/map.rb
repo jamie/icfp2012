@@ -174,7 +174,7 @@ class Lifter::Map
           end
         end
       when CLOSED_LIFT
-        if @map.flatten.count(LAMBDA) == 0
+        if @map.flatten.join.split(//).count(LAMBDA) == 0
           set_new_map(OPEN_LIFT, x, y)
         end
     end

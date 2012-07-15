@@ -43,18 +43,20 @@ class Lifter::Map
   end
   
   def tell_robot(command)
-    raise "Commands after execution aborted!" if @aborted
-    raise "Commands after robot was crushed!" if dead?
-    @moves += 1
-    send({
-      "A" => :abort,
-      "D" => :move_down,
-      "L" => :move_left,
-      "R" => :move_right,
-      "U" => :move_up,
-      "W" => :wait
-    }[command])
-    update_environment
+    command.split(//).each do |cmd|
+      raise "Commands after execution aborted!" if @aborted
+      raise "Commands after robot was crushed!" if dead?
+      @moves += 1
+      send({
+        "A" => :abort,
+        "D" => :move_down,
+        "L" => :move_left,
+        "R" => :move_right,
+        "U" => :move_up,
+        "W" => :wait
+      }[cmd])
+      update_environment
+    end
   end
   
   def position(thing)

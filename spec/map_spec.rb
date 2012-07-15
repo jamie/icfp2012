@@ -7,6 +7,40 @@ class String
 end
 
 describe Lifter::Map do
+  describe "movement" do
+    it "pushes rocks left" do
+      map = Lifter::Map.new(<<-MAP.undent(6))
+      ######
+      # *R O
+      #    #
+      ######
+      MAP
+      map.move_left
+      map.to_s(false).must_equal <<-MAP.undent(6)
+      ######
+      #*R  O
+      #    #
+      ######
+      MAP
+    end
+
+    it "pushes rocks right" do
+      map = Lifter::Map.new(<<-MAP.undent(6))
+      ######
+      # R* O
+      #    #
+      ######
+      MAP
+      map.move_right
+      map.to_s(false).must_equal <<-MAP.undent(6)
+      ######
+      #  R*O
+      #    #
+      ######
+      MAP
+    end
+  end
+  
   describe "#update_environment" do
     it "must drop rocks vertically" do
       map = Lifter::Map.new(<<-MAP.undent(6))

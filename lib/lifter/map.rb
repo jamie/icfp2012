@@ -43,6 +43,7 @@ class Lifter::Map
       "U" => :move_up,
       "W" => :wait
     }[command])
+    update_environment
   end
   
   def position(thing)
@@ -78,38 +79,46 @@ class Lifter::Map
   
   def move_down
     next_pos = [robot[0], robot[1] - 1]
-    update(next_pos)
+    move_to(next_pos)
   end
   
   def move_left
     next_pos = [robot[0] - 1, robot[1]]
-    update(next_pos)
+    push_pos = [robot[0] - 2, robot[1]]
+    push_rock(next_pos, push_pos)
+    move_to(next_pos)
   end
   
   def move_right
     next_pos = [robot[0] + 1, robot[1]]
-    update(next_pos)
+    push_pos = [robot[0] + 2, robot[1]]
+    push_rock(next_pos, push_pos)
+    move_to(next_pos)
   end
   
   def move_up
     next_pos = [robot[0], robot[1] + 1]
-    update(next_pos)
+    move_to(next_pos)
   end
   
   def wait
-    update_environment
   end
   
-  def update(next_pos)
+  def move_to(next_pos)
     next_tile = map(*next_pos)
-    puts next_tile
     if [EMPTY, EARTH, LAMBDA, OPEN_LIFT].include? next_tile
       set_map(EMPTY, *robot)
       set_map(ROBOT, *next_pos)
       @lambdas += 1 if next_tile == LAMBDA
       @won = true if next_tile == OPEN_LIFT
     end
-    update_environment
+  end
+  
+  def push_rock(next_pos, push_pos)
+    if map(*next_pos) == ROCK && map(*push_pos) == EMPTY
+      set_map(EMPTY, *next_pos)
+      set_map(ROCK, *push_pos)
+    end
   end
   
   def try_open_lift

@@ -39,7 +39,7 @@ class Lifter::Map
     @dead
   end
   def won?
-    @won
+    position(CLOSED_LIFT).nil? && position(OPEN_LIFT).nil?
   end
   
   def tell_robot(command)
@@ -63,6 +63,8 @@ class Lifter::Map
     y = @map.index{|line| line.include? thing}
     x = @map[y].index(thing)
     [x,y]
+  rescue
+    nil
   end
   
   def map(x,y)

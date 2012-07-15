@@ -1,0 +1,11 @@
+Solution for the [2012 ICFP Programming Contest](http://icfpcontest2012.wordpress.com/)
+
+### About This Solution
+
+I'm trying to do the stupidest thing possible. Exhaustively enumerate
+possible solutions, keeping track of past positions. Run until a
+solution arrives at the exit, or until SIGINT is received.
+
+### Notes
+
+[Online solution verifier](http://www.undecidable.org.uk/~edwin/cgi-bin/weblifter.cgi)

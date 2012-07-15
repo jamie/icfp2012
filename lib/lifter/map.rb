@@ -1,27 +1,22 @@
 class Lifter::Map
-  MAPCHARS = {
-    'R' => :robot,
-    '#' => :wall,
-    '*' => :rock,
-    '\\' => :lambda,
-    'L' => :closed_lift,
-    'O' => :open_lift,
-    '.' => :earth,
-    ' ' => :empty
-  }
+  ROBOT       = 'R'
+  WALL        = '#'
+  ROCK        = '*'
+  LAMBDA      = '\\'
+  CLOSED_LIFT = 'L'
+  OPEN_LIFT   = 'O'
+  EARTH       = '.'
+  EMPTY       = ' '
   
   def initialize(map, lambdas=0, moves=0)
     @lambdas = lambdas
     @moves = moves
     @aborted = @won = false
-    @map = []
-    map.split("\n").each do |line|
-      @map.unshift line.split(//).map{|c| MAPCHARS[c]}
-    end
+    @map = map.split("\n").reverse
   end
   
   def to_s(include_score = true)
-    out = @map.map{|line| line.map{|tile| MAPCHARS.key(tile)}.join}.reverse.join("\n")
+    out = @map.reverse.join("\n")
     return out unless include_score
     [
       out,
@@ -63,8 +58,18 @@ class Lifter::Map
     @map[y][x] = v
   end
   
+  def setup_new_map
+    @new_map = @map.clone
+  end
+  def set_new_map(v,x,y)
+    @new_map[y][x] = v
+  end
+  def finalize_new_map
+    @map = @new_map
+  end
+  
   def robot
-    position(:robot)
+    position(ROBOT)
   end
   
   def abort
@@ -98,53 +103,55 @@ class Lifter::Map
   def update(next_pos)
     next_tile = map(*next_pos)
     puts next_tile
-    if [:empty, :earth, :lambda, :open_lift].include? next_tile
-      set_map(:empty, *robot)
-      set_map(:robot, *next_pos)
-      @lambdas += 1 if next_tile == :lambda
-      @won = true if next_tile == :open_lift
+    if [EMPTY, EARTH, LAMBDA, OPEN_LIFT].include? next_tile
+      set_map(EMPTY, *robot)
+      set_map(ROBOT, *next_pos)
+      @lambdas += 1 if next_tile == LAMBDA
+      @won = true if next_tile == OPEN_LIFT
     end
     update_environment
   end
   
   def try_open_lift
-    if @map.flatten.count(:lambda) == 0
-      lift = position(:closed_lift)
-      set_map(:open_lift, *lift)
+    if @map.flatten.count(LAMBDA) == 0
+      lift = position(CLOSED_LIFT)
+      set_map(OPEN_LIFT, *lift)
     end
   end
   
   def update_environment
+    setup_new_map
     @map.each_with_index do |row, y|
-      row.each_with_index do |tile, x|
+      row.size.times do |x|
         update_environment_cell(x, y)
       end
     end
+    finalize_new_map
   end
   
   def update_environment_cell(x, y)
     case map(x,y)
-      when :rock
-        if map(x,y-1) == :empty
-          set_map(:empty, x, y)
-          set_map(:rock, x, y-1)
-        elsif map(x,y-1) == :rock
-          if map(x+1,y) == :empty && map(x+1,y-1) == :empty
-            set_map(:empty, x, y)
-            set_map(:rock, x+1, y-1)
-          elsif map(x-1,y) == :empty && map(x-1,y-1) == :empty
-            set_map(:empty, x, y)
-            set_map(:rock, x-1, y-1)
+      when ROCK
+        if map(x,y-1) == EMPTY
+          set_new_map(EMPTY, x, y)
+          set_new_map(ROCK, x, y-1)
+        elsif map(x,y-1) == ROCK
+          if map(x+1,y) == EMPTY && map(x+1,y-1) == EMPTY
+            set_new_map(EMPTY, x, y)
+            set_new_map(ROCK, x+1, y-1)
+          elsif map(x-1,y) == EMPTY && map(x-1,y-1) == EMPTY
+            set_new_map(EMPTY, x, y)
+            set_new_map(ROCK, x-1, y-1)
           end
-        elsif map(x,y-1) == :lambda
-          if map(x+1,y) == :empty && map(x+1,y-1) == :empty
-            set_map(:empty, x, y)
-            set_map(:rock, x+1, y-1)
+        elsif map(x,y-1) == LAMBDA
+          if map(x+1,y) == EMPTY && map(x+1,y-1) == EMPTY
+            set_new_map(EMPTY, x, y)
+            set_new_map(ROCK, x+1, y-1)
           end
         end
-      when :closed_lift
-        if @map.flatten.count(:lambda) == 0
-          set_map(:open_lift, x, y)
+      when CLOSED_LIFT
+        if @map.flatten.count(LAMBDA) == 0
+          set_new_map(OPEN_LIFT, x, y)
         end
     end
   end

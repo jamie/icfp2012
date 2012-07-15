@@ -11,6 +11,7 @@ class Lifter::Map
   def initialize(map, lambdas=0, moves=0)
     @lambdas = lambdas
     @moves = moves
+    @dead = false
     @aborted = @won = false
     @map = map.split("\n").reverse
   end
@@ -30,6 +31,10 @@ class Lifter::Map
     score *= 2 if @aborted
     score *= 3 if @won
     score * 25 - @moves
+  end
+  
+  def dead?
+    @dead
   end
   
   def tell_robot(command)
@@ -144,18 +149,22 @@ class Lifter::Map
         if map(x,y-1) == EMPTY
           set_new_map(EMPTY, x, y)
           set_new_map(ROCK, x, y-1)
+          @dead = true if map(x,y-2) == ROBOT
         elsif map(x,y-1) == ROCK
           if map(x+1,y) == EMPTY && map(x+1,y-1) == EMPTY
             set_new_map(EMPTY, x, y)
             set_new_map(ROCK, x+1, y-1)
+            @dead = true if map(x+1,y-2) == ROBOT
           elsif map(x-1,y) == EMPTY && map(x-1,y-1) == EMPTY
             set_new_map(EMPTY, x, y)
             set_new_map(ROCK, x-1, y-1)
+            @dead = true if map(x-1,y-2) == ROBOT
           end
         elsif map(x,y-1) == LAMBDA
           if map(x+1,y) == EMPTY && map(x+1,y-1) == EMPTY
             set_new_map(EMPTY, x, y)
             set_new_map(ROCK, x+1, y-1)
+            @dead = true if map(x+1,y-2) == ROBOT
           end
         end
       when CLOSED_LIFT

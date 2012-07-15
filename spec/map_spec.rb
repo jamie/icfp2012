@@ -137,5 +137,47 @@ describe Lifter::Map do
       ######
       MAP
     end
+
+    it "squishes robots" do
+      map = Lifter::Map.new(<<-MAP.undent(6))
+      ######
+      # *  O
+      #    #
+      # R  #
+      ######
+      MAP
+      map.update_environment
+      map.dead?.must_equal true
+
+      map = Lifter::Map.new(<<-MAP.undent(6))
+      ######
+      # *  O
+      # *  #
+      # .R #
+      ######
+      MAP
+      map.update_environment
+      map.dead?.must_equal true
+
+      map = Lifter::Map.new(<<-MAP.undent(6))
+      ######
+      # *. O
+      # *  #
+      #R.  #
+      ######
+      MAP
+      map.update_environment
+      map.dead?.must_equal true
+
+      map = Lifter::Map.new(<<-MAP.undent(6))
+      ######
+      # *  O
+      # \\  #
+      #  R #
+      ######
+      MAP
+      map.update_environment
+      map.dead?.must_equal true
+    end
   end
 end

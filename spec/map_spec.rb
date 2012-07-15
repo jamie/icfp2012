@@ -16,7 +16,7 @@ describe Lifter::Map do
       ######
       MAP
       map.move_left
-      map.to_s(false).must_equal <<-MAP.undent(6)
+      map.to_s.must_equal <<-MAP.undent(6)
       ######
       #*R  O
       #    #
@@ -32,7 +32,7 @@ describe Lifter::Map do
       ######
       MAP
       map.move_right
-      map.to_s(false).must_equal <<-MAP.undent(6)
+      map.to_s.must_equal <<-MAP.undent(6)
       ######
       #  R*O
       #    #
@@ -50,7 +50,7 @@ describe Lifter::Map do
       ######
       MAP
       map.update_environment
-      map.to_s(false).must_equal <<-MAP.undent(6)
+      map.to_s.must_equal <<-MAP.undent(6)
       ######
       #   RO
       # *  #
@@ -66,7 +66,7 @@ describe Lifter::Map do
       ######
       MAP
       map.update_environment
-      map.to_s(false).must_equal <<-MAP.undent(6)
+      map.to_s.must_equal <<-MAP.undent(6)
       ######
       #   RO
       # ** #
@@ -82,7 +82,7 @@ describe Lifter::Map do
       ######
       MAP
       map.update_environment
-      map.to_s(false).must_equal <<-MAP.undent(6)
+      map.to_s.must_equal <<-MAP.undent(6)
       ######
       #  .RO
       #**  #
@@ -98,7 +98,7 @@ describe Lifter::Map do
       ######
       MAP
       map.update_environment
-      map.to_s(false).must_equal <<-MAP.undent(6)
+      map.to_s.must_equal <<-MAP.undent(6)
       ######
       #   RO
       #**. #
@@ -114,7 +114,7 @@ describe Lifter::Map do
       ######
       MAP
       map.update_environment
-      map.to_s(false).must_equal <<-MAP.undent(6)
+      map.to_s.must_equal <<-MAP.undent(6)
       ######
       #   RO
       # \\* #
@@ -130,7 +130,7 @@ describe Lifter::Map do
       ######
       MAP
       map.update_environment
-      map.to_s(false).must_equal <<-MAP.undent(6)
+      map.to_s.must_equal <<-MAP.undent(6)
       ######
       #   RO
       #*** #

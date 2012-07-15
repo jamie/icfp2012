@@ -16,7 +16,7 @@ class Lifter::Map
     @map = map.split("\n").reverse
   end
   
-  def to_s(include_score = true)
+  def to_s(include_score = false)
     out = @map.reverse.join("\n")
     return out unless include_score
     [

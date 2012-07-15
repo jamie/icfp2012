@@ -51,9 +51,16 @@ class Lifter::Map
   end
   
   def position(thing)
-    x = @map.index{|line| line.include? thing}
-    y = @map[x].index(thing)
+    y = @map.index{|line| line.include? thing}
+    x = @map[y].index(thing)
     [x,y]
+  end
+  
+  def map(x,y)
+    @map[y][x]
+  end
+  def set_map(v,x,y)
+    @map[y][x] = v
   end
   
   def robot
@@ -65,22 +72,22 @@ class Lifter::Map
   end
   
   def move_down
-    next_pos = [robot[0] - 1, robot[1]]
-    update(next_pos)
-  end
-  
-  def move_left
     next_pos = [robot[0], robot[1] - 1]
     update(next_pos)
   end
   
+  def move_left
+    next_pos = [robot[0] - 1, robot[1]]
+    update(next_pos)
+  end
+  
   def move_right
-    next_pos = [robot[0], robot[1] + 1]
+    next_pos = [robot[0] + 1, robot[1]]
     update(next_pos)
   end
   
   def move_up
-    next_pos = [robot[0] + 1, robot[1]]
+    next_pos = [robot[0], robot[1] + 1]
     update(next_pos)
   end
   
@@ -89,18 +96,13 @@ class Lifter::Map
   end
   
   def update(next_pos)
-    next_tile = @map[next_pos[0]][next_pos[1]]
+    next_tile = map(*next_pos)
     puts next_tile
     if [:empty, :earth, :lambda, :open_lift].include? next_tile
-      @map[robot[0]   ][robot[1]   ] = :empty
-      @map[next_pos[0]][next_pos[1]] = :robot
-      if next_tile == :lambda
-        @lambdas += 1
-        try_open_lift
-      end
-      if next_tile == :open_lift
-        @won = true
-      end
+      set_map(:empty, *robot)
+      set_map(:robot, *next_pos)
+      @lambdas += 1 if next_tile == :lambda
+      @won = true if next_tile == :open_lift
     end
     update_environment
   end
@@ -108,10 +110,42 @@ class Lifter::Map
   def try_open_lift
     if @map.flatten.count(:lambda) == 0
       lift = position(:closed_lift)
-      @map[lift[0]][lift[1]] = :open_lift
+      set_map(:open_lift, *lift)
     end
   end
   
   def update_environment
+    @map.each_with_index do |row, y|
+      row.each_with_index do |tile, x|
+        update_environment_cell(x, y)
+      end
+    end
+  end
+  
+  def update_environment_cell(x, y)
+    case map(x,y)
+      when :rock
+        if map(x,y-1) == :empty
+          set_map(:empty, x, y)
+          set_map(:rock, x, y-1)
+        elsif map(x,y-1) == :rock
+          if map(x+1,y) == :empty && map(x+1,y-1) == :empty
+            set_map(:empty, x, y)
+            set_map(:rock, x+1, y-1)
+          elsif map(x-1,y) == :empty && map(x-1,y-1) == :empty
+            set_map(:empty, x, y)
+            set_map(:rock, x-1, y-1)
+          end
+        elsif map(x,y-1) == :lambda
+          if map(x+1,y) == :empty && map(x+1,y-1) == :empty
+            set_map(:empty, x, y)
+            set_map(:rock, x+1, y-1)
+          end
+        end
+      when :closed_lift
+        if @map.flatten.count(:lambda) == 0
+          set_map(:open_lift, x, y)
+        end
+    end
   end
 end

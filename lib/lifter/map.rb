@@ -28,13 +28,16 @@ class Lifter::Map
   
   def score
     score = @lambdas
-    score *= 2 if @aborted
-    score *= 3 if @won
+    score += @lambdas if !dead?
+    score += @lambdas if won?
     score * 25 - @moves
   end
   
   def dead?
     @dead
+  end
+  def won?
+    @won
   end
   
   def tell_robot(command)

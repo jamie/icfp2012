@@ -59,7 +59,7 @@ class Lifter::Map
   end
   
   def setup_new_map
-    @new_map = @map.clone
+    @new_map = @map.map{|line| line.dup}
   end
   def set_new_map(v,x,y)
     @new_map[y][x] = v

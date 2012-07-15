@@ -87,5 +87,21 @@ describe Lifter::Map do
       ######
       MAP
     end
+    
+    it "updates atomically" do
+      map = Lifter::Map.new(<<-MAP.undent(6))
+      ######
+      #* *RO
+      #* * #
+      ######
+      MAP
+      map.update_environment
+      map.to_s(false).must_equal <<-MAP.undent(6)
+      ######
+      #   RO
+      #*** #
+      ######
+      MAP
+    end
   end
 end

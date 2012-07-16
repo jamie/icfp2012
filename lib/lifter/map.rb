@@ -80,6 +80,10 @@ class Lifter::Map
   def set_new_map(v,x,y)
     @new_map[y][x] = v
   end
+  def move_new(v, x, y, x2, y2)
+    set_new_map(EMPTY, x, y)
+    set_new_map(v, x2, y2)
+  end
   def finalize_new_map
     @map = @new_map
   end
@@ -157,23 +161,19 @@ class Lifter::Map
     case map(x,y)
       when ROCK
         if map(x,y-1) == EMPTY
-          set_new_map(EMPTY, x, y)
-          set_new_map(ROCK, x, y-1)
+          move_new(ROCK, x, y, x, y-1)
           @dead = true if map(x,y-2) == ROBOT
         elsif map(x,y-1) == ROCK
           if map(x+1,y) == EMPTY && map(x+1,y-1) == EMPTY
-            set_new_map(EMPTY, x, y)
-            set_new_map(ROCK, x+1, y-1)
+            move_new(ROCK, x, y, x+1, y-1)
             @dead = true if map(x+1,y-2) == ROBOT
           elsif map(x-1,y) == EMPTY && map(x-1,y-1) == EMPTY
-            set_new_map(EMPTY, x, y)
-            set_new_map(ROCK, x-1, y-1)
+            move_new(ROCK, x, y, x-1, y-1)
             @dead = true if map(x-1,y-2) == ROBOT
           end
         elsif map(x,y-1) == LAMBDA
           if map(x+1,y) == EMPTY && map(x+1,y-1) == EMPTY
-            set_new_map(EMPTY, x, y)
-            set_new_map(ROCK, x+1, y-1)
+            move_new(ROCK, x, y, x+1, y-1)
             @dead = true if map(x+1,y-2) == ROBOT
           end
         end

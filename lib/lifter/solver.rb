@@ -25,7 +25,7 @@ class Lifter::Solver
       p [command, map.score, map.solver_score, @commands.size, @solutions.size] if noisy
       if @solutions[map.to_s].nil?
         @solutions[map.to_s] = command
-        %w(L R D U).each do |next_cmd|
+        %w(U D L R).each do |next_cmd|
           @commands[map.solver_score] ||= []
           @commands[map.solver_score] << command + next_cmd
         end unless map.dead?

@@ -1,27 +1,33 @@
 class Lifter::Solver
   def initialize(map)
     @map = map
-    @commands = %w(W L R D U)
+    @commands = {0 => %w(W L R D U)}
     @solutions = {map => "A"}
     @best_solution = [0, "A", map]
   end
   
   def solve
+    i=0
     while !Lifter::Map.new(@best_solution[2]).won?
-      solve_next
+      i += 1
+      solve_next(i == 1000)
+      i %= 1000
     end
   end
   
-  def solve_next
+  def solve_next(noisy=false)
     map = Lifter::Map.new(@map)
-    command = @commands.shift
+    best_score = @commands.keys.max
+    command = @commands[best_score].shift
+    @commands.delete(best_score) if @commands[best_score].empty?
     begin
       map.tell_robot(command)
-      p [command, map.score, @commands.size, @solutions.size]
+      p [command, map.score, @commands.size, @solutions.size] if noisy
       if @solutions[map.to_s].nil?
         @solutions[map.to_s] = command
         %w(W L R D U).each do |next_cmd|
-          @commands << command + next_cmd
+          @commands[map.score] ||= []
+          @commands[map.score] << command + next_cmd
         end unless map.dead?
       end
     end

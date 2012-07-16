@@ -6,8 +6,10 @@ class Lifter < Thor
   end
   
   desc "solve MAP", "Solve a map and output the robot commands and score"
+  method_options :profile => false
   def solve(map)
     require './lib/lifter'
+    require 'profile' if options[:profile]
     solver = ::Lifter::Solver.new(File.read(map))
     solver.solve
     puts solver.solution

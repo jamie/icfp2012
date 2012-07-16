@@ -35,6 +35,10 @@ class Lifter::Map
     score * 25 - @moves
   end
   
+  def solver_score
+    @lambdas * 10 - @moves
+  end
+  
   def dead?
     @dead
   end

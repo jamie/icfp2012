@@ -15,6 +15,15 @@ class Lifter < Thor
     puts solver.solution
   end
   
+  desc "solve_sim MAP", "Solve a map and simulate its output"
+  def solve_sim(map)
+    require './lib/lifter'
+    solver = ::Lifter::Solver.new(File.read(map))
+    solver.solve(false)
+    puts solver.solution
+    ::Lifter::Simulator.new(File.read(map), solver.solution).simulate
+  end
+  
   desc "solve:all", "Solve all maps in test/*.map, and output robot commands and score"
   def solve_all
     

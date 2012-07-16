@@ -9,3 +9,11 @@ solution arrives at the exit, or until SIGINT is received.
 ### Notes
 
 [Online solution verifier](http://www.undecidable.org.uk/~edwin/cgi-bin/weblifter.cgi)
+
+### TODO
+
+- Speed things the hell up.
+
+- Once reasonably speedy (at least < 1 second for contest10.map), handle SIGINT to output highest-scoring interim solution.
+
+- Get running inside debian VM, with all necessary setup in ./install and ./PACKAGES-TESTING.

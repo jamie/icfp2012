@@ -6,6 +6,9 @@ I'm trying to do the stupidest thing possible. Exhaustively enumerate
 possible solutions, keeping track of past positions. Run until a
 solution arrives at the exit, or until SIGINT is received.
 
+Note that this brute force solution is highly unlikely to be successful
+at scoring for anything, and doubly so on account of it being in Ruby.
+
 ### Notes
 
 [Online solution verifier](http://www.undecidable.org.uk/~edwin/cgi-bin/weblifter.cgi)

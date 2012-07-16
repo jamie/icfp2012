@@ -11,7 +11,7 @@ class Lifter < Thor
     require './lib/lifter'
     require 'profile' if options[:profile]
     solver = ::Lifter::Solver.new(File.read(map))
-    solver.solve
+    solver.solve(true)
     puts solver.solution
   end
   

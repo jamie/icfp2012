@@ -6,11 +6,11 @@ class Lifter::Solver
     @best_solution = [0, "A", map]
   end
   
-  def solve
+  def solve(noisy=false)
     i=0
     while !Lifter::Map.new(@best_solution[2]).won?
       i += 1
-      solve_next(i == 1000)
+      solve_next(noisy && i == 1000)
       i %= 1000
     end
   end

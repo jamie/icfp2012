@@ -26,6 +26,13 @@ class Lifter < Thor
   
   desc "solve:all", "Solve all maps in test/*.map, and output robot commands and score"
   def solve_all
-    
+    require './lib/lifter'
+    Dir['./test/contest*.map'].each do |map|
+      solver = ::Lifter::Solver.new(File.read(map))
+      time = Time.now
+      solver.solve(false)
+      time = Time.now - time
+      puts "%s (%.2fs): %s" % [map, time, solver.solution]
+    end
   end
 end

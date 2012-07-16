@@ -1,2 +1,4 @@
-LRDDDULULLDDL # brute force
-LDLLDRRDRLULLDL # first to solve, best score first
+LRDDDULULLDDL # brute force, 4.8 sec
+LDLLDRRDRLULLDL # first to solve, best score first, 0.45 sec
+LDLLDRRDRLULLDL # same, but don't use Wait commands, 0.40 sec
+LDLLDRRDRLULLDL # change lambda/movement scoring weights, 0.40 sec
